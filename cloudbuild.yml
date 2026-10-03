@@ -1,7 +1,6 @@
 substitutions:
   _LOCATION: asia-southeast1
   _REPOSITORY: security-gate
-  _SERVICE: go-sast
   _TAG: latest
 
 steps:
@@ -20,22 +19,6 @@ steps:
     args:
       - push
       - ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/go-sast:${_TAG}
-
-  - id: deploy
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk
-    waitFor:
-      - push
-    entrypoint: gcloud
-    args:
-      - run
-      - deploy
-      - ${_SERVICE}
-      - --image=${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/go-sast:${_TAG}
-      - --region=${_LOCATION}
-      - --platform=managed
-      - --port=8080
-      - --allow-unauthenticated
-      - --quiet
 
 images:
   - ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/go-sast:${_TAG}
